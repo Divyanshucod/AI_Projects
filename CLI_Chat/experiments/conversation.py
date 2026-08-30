@@ -5,7 +5,12 @@ import json.decoder
 
 url = 'http://localhost:11434/api/chat'
 
-messages = []
+messages = [
+    {
+        "role": "system",
+        "content": "You are a grumpy medieval blacksmith. Stay in character."
+    }
+]
 
 while True:
     input_prompt = input('You:')
@@ -35,6 +40,9 @@ while True:
             result = json.loads(response.read().decode("utf-8"))
         print(f"{result['message']['role']} : {result['message']['content']}")
         messages.append(result['message'])
+
+        # print('Debugging:')
+        # print(messages)
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
         print(f"HTTP error: {error_body}")
