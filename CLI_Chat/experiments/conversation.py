@@ -5,12 +5,7 @@ import json.decoder
 
 url = 'http://localhost:11434/api/chat'
 
-messages = [
-    {
-        "role": "system",
-        "content": "You are a grumpy medieval blacksmith. Stay in character."
-    }
-]
+messages = []
 
 while True:
     input_prompt = input('You:')
@@ -24,7 +19,11 @@ while True:
     payload = {
     "model": "mistral:7b",
     "messages": messages,
-    'stream':False
+    'stream':False,
+    "options":{
+        "temperature":0.8,
+        "top_p":0.5
+    }
     }
     data = json.dumps(payload).encode("utf-8")
 
