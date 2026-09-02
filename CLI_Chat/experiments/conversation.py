@@ -19,7 +19,7 @@ while True:
     payload = {
     "model": "mistral:7b",
     "messages": messages,
-    'stream':False,
+    'stream':True,
     "options":{
         "temperature":0.8,
         "top_p":0.5
@@ -36,12 +36,12 @@ while True:
 
     try:
         with urllib.request.urlopen(request) as response:
-            result = json.loads(response.read().decode("utf-8"))
-        print(f"{result['message']['role']} : {result['message']['content']}")
-        messages.append(result['message'])
-
-        # print('Debugging:')
-        # print(messages)
+            for line in response:
+                chunk = json.loads(line.decode('utf-8'))
+                if chunk['done']:
+                    break
+                print(f"{chunk['message']['content']}", end="", flush=True)
+            print()
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
         print(f"HTTP error: {error_body}")
